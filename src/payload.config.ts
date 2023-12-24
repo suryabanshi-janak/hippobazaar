@@ -1,7 +1,8 @@
 import { buildConfig } from "payload/config";
+import type { RichTextAdapter } from 'payload/types';
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
-import { slateEditor } from "@payloadcms/richtext-slate";
+import { slateEditor,  } from "@payloadcms/richtext-slate";
 import path from "path";
 
 export default buildConfig({
@@ -11,10 +12,9 @@ export default buildConfig({
     admin: "/sell",
   },
   admin: {
-    user: "users",
     bundler: webpackBundler(),
     meta: {
-      titleSuffix: "- DigitalHippo",
+      titleSuffix: "- HippoBazaar",
       favicon: "/favicon.ico",
       ogImage: "/thumbnail.jpg",
     },
@@ -22,7 +22,7 @@ export default buildConfig({
   rateLimit: {
     max: 2000,
   },
-  editor: slateEditor({}),
+  editor: slateEditor({}) as RichTextAdapter<any, any, any>,
   db: mongooseAdapter({
     url: process.env.MONGODB_URL!,
   }),
