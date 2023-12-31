@@ -7,21 +7,26 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  AuthCredenialsValidator,
-  TAuthCredenialsValidator,
+  AuthCredentialsValidator,
+  TAuthCredentialsValidator,
 } from '@/lib/validators/auth-credentials-validator';
 import { cn } from '@/lib/utils';
+import { trpc } from '@/trpc/client';
 
 export default function SignupForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TAuthCredenialsValidator>({
-    resolver: zodResolver(AuthCredenialsValidator),
+  } = useForm<TAuthCredentialsValidator>({
+    resolver: zodResolver(AuthCredentialsValidator),
   });
 
-  const onSubmit = ({ email, password }: TAuthCredenialsValidator) => {};
+  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({});
+
+  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
+    mutate({ email, password });
+  };
 
   return (
     <div className='grid gap-6'>
@@ -56,7 +61,7 @@ export default function SignupForm() {
             )}
           </div>
 
-          <Button>Sign up</Button>
+          <Button type='submit'>Sign up</Button>
         </div>
       </form>
     </div>
