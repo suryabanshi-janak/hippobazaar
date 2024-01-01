@@ -8,14 +8,8 @@ export const authRouter = router({
     .input(AuthCredentialsValidator)
     .mutation(async ({ input }) => {
       const { email, password } = input;
-      console.log('🚀 ~ file: auth-router.ts:11 ~ .mutation ~ input:', input);
       const payload = await getPayloadClient();
-      console.log(
-        '🚀 ~ file: auth-router.ts:13 ~ .mutation ~ payload:',
-        payload
-      );
 
-      // check if user already exists
       const { docs: users } = await payload.find({
         collection: 'users',
         where: {
