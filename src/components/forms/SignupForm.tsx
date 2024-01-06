@@ -1,19 +1,25 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { ZodError } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { trpc } from '@/trpc/client';
+import { cn } from '@/lib/utils';
 import {
   AuthCredentialsValidator,
   TAuthCredentialsValidator,
 } from '@/lib/validators/auth-credentials-validator';
-import { cn } from '@/lib/utils';
-import { trpc } from '@/trpc/client';
+import { Loader2 } from 'lucide-react';
 
 export default function SignupForm() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,7 +28,27 @@ export default function SignupForm() {
     resolver: zodResolver(AuthCredentialsValidator),
   });
 
-  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({});
+  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
+    onError: (err) => {
+      if (err.data?.code === 'CONFLICT') {
+        toast.error('This email is already in use. Sign in instead?');
+
+        return;
+      }
+
+      if (err instanceof ZodError) {
+        toast.error(err.issues[0].message);
+
+        return;
+      }
+
+      toast.error('Something went wrong. Please try again.');
+    },
+    onSuccess: ({ sentToEmail }) => {
+      toast.success(`Verification email sent to ${sentToEmail}.`);
+      router.push('/verify-email?to=' + sentToEmail);
+    },
+  });
 
   const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
     mutate({ email, password });
@@ -61,7 +87,12 @@ export default function SignupForm() {
             )}
           </div>
 
-          <Button type='submit'>Sign up</Button>
+          <Button type='submit'>
+            {isLoading && (
+              <Loader2 className='animate-spin w-4 h-4 mr-2 mt-0.5' />
+            )}
+            Sign up
+          </Button>
         </div>
       </form>
     </div>
