@@ -6,6 +6,7 @@ import NavItems from './NavItems';
 import { buttonVariants } from './ui/button';
 import Cart from './Cart';
 import { getServerSideUser } from '@/lib/payload-utils';
+import UserAccountNav from './UserAccountNav';
 
 export default async function Navbar() {
   const nextCookies = cookies();
@@ -45,7 +46,7 @@ export default async function Navbar() {
                   )}
 
                   {user ? (
-                    <div></div>
+                    <UserAccountNav user={user} />
                   ) : (
                     <Link
                       href='/sign-up'
