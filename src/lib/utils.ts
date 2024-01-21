@@ -1,3 +1,5 @@
+import { PRODUCT_CATEGORIES } from '@/config';
+import { Product } from '@/payload-types';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -22,4 +24,14 @@ export function formatPrice(
     notation,
     maximumFractionDigits: 2,
   }).format(numericPrice);
+}
+
+export function productLabel(category: string) {
+  return PRODUCT_CATEGORIES.find(({ value }) => value === category)?.label;
+}
+
+export function productImageUrls(product: Product) {
+  return product.images
+    .map(({ image }) => (typeof image === 'string' ? image : image.url))
+    .filter(Boolean) as string[];
 }
