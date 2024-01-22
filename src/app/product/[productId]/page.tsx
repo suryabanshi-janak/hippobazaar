@@ -5,7 +5,7 @@ import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import Breadcrumb, { type Breadcrumbs } from '@/components/Breadcrumb';
 import { formatPrice, productImageUrls, productLabel } from '@/lib/utils';
 import ImageSlider from '@/components/ImageSlider';
-import AddToCartButton from '@/components/AddToCart';
+import AddToCartButton from '@/components/AddToCartButton';
 import ProductReel from '@/components/ProductReel';
 
 interface PageProps {

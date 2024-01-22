@@ -3,8 +3,10 @@
 import { Product } from '@/payload-types';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
+import { useCart } from '@/hooks/use-cart';
 
 export default function AddToCartButton({ product }: { product: Product }) {
+  const { addItem } = useCart();
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
     <Button
       onClick={() => {
         setIsSuccess(true);
+        addItem(product);
       }}
       size='lg'
       className='w-full'
