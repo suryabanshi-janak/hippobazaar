@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Check, Loader2, X } from 'lucide-react';
@@ -8,9 +9,21 @@ import { Check, Loader2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/use-cart';
 import { cn, formatPrice, productLabel } from '@/lib/utils';
+import { trpc } from '@/trpc/client';
 
 export default function Cart() {
   const { items, removeItem } = useCart();
+
+  const router = useRouter();
+
+  const { mutate: createCheckoutSession, isLoading } =
+    trpc.payment.createSession.useMutation({
+      onSuccess: ({ url }) => {
+        if (url) router.push(url);
+      },
+    });
+
+  const productIds = items.map(({ product }) => product.id);
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
   useEffect(() => {
@@ -180,7 +193,15 @@ export default function Cart() {
             </div>
 
             <div className='mt-6'>
-              <Button size='lg' className='w-full'>
+              <Button
+                size='lg'
+                className='w-full'
+                onClick={() => createCheckoutSession({ productIds })}
+                disabled={items.length === 0 || isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className='w-4 h-4 animate-spin mr-1.5' />
+                ) : null}
                 Checkout
               </Button>
             </div>

@@ -1,16 +1,16 @@
 import { z } from 'zod';
-import { TRPCError } from '@trpc/server';
 import { privateProcedure, router } from './trpc';
+import { TRPCError } from '@trpc/server';
 import { getPayloadClient } from '../get-payload';
-import type Stripe from 'stripe';
 import { stripe } from '../lib/stripe';
+import type Stripe from 'stripe';
 
 export const paymentRouter = router({
   createSession: privateProcedure
     .input(z.object({ productIds: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
-      const { productIds } = input;
+      let { productIds } = input;
 
       if (productIds.length === 0) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
@@ -48,7 +48,7 @@ export const paymentRouter = router({
       });
 
       line_items.push({
-        price: 'price_1ObQG2SBcT3M4tAq9CdDvY79',
+        price: 'price_1OCeBwA19umTXGu8s4p2G3aX',
         quantity: 1,
         adjustable_quantity: {
           enabled: false,
