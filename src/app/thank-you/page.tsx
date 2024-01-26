@@ -1,12 +1,12 @@
-import { getServerSideUser } from '@/lib/payload-utils';
+import Link from 'next/link';
 import Image from 'next/image';
 import { cookies } from 'next/headers';
-import { getPayloadClient } from '@/get-payload';
 import { notFound, redirect } from 'next/navigation';
-import { Product, ProductFile, User } from '@/payload-types';
-import { PRODUCT_CATEGORIES } from '@/config';
+
+import { getServerSideUser } from '@/lib/payload-utils';
+import { getPayloadClient } from '@/get-payload';
+import { Product, ProductFile } from '@/payload-types';
 import { formatPrice, productLabel } from '@/lib/utils';
-import Link from 'next/link';
 
 interface PageProps {
   searchParams: {
