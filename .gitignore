@@ -39,3 +39,5 @@ next-env.d.ts
 # images
 media
 product_files
+
+dist

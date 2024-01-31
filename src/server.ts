@@ -7,6 +7,8 @@ import { inferAsyncReturnType } from "@trpc/server";
 import bodyParser from "body-parser";
 import { IncomingMessage } from "http";
 import { stripeWebhookHandler } from "./webhooks";
+import nextBuild from "next/dist/build";
+import path from "path";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
